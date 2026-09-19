@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #da4011;
+  --secondary: #111827;
+  --background: #ffffff;
+  --text: #000000;
+}
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 1.4s linear infinite;
+}
+
+/*
+localStorage.setItem("theme", JSON.stringify({
+  primary: "#ff6b35",
+  background: "#121212",
+}));
+
+if (saved) {
+  Object.entries(saved).forEach(([key, value]) => {
+    document.documentElement.style.setProperty(`--${key}`, value);
+  });
+}
+*/
