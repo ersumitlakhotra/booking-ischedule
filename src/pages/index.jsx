@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useAlert } from "../controls/AlertProvider";
 import { Image, Modal, Textbox } from "../controls";
 import { CircleChevronRight,  Map, Phone } from "lucide-react";
-import { guestAuth } from "../hook/apiCall";
 import { CellFormat } from "../common/validate";
 import FetchData from "../hook/fetchData";
 import { useAuth } from "../auth/authContext";
@@ -106,8 +105,8 @@ export const Index = () => {
 
     return (
         <>
-            <div class='flex flex-col font-normal gap-3 mt-2 w-full mb-4 p-3 md:px-8 ' >
-                <p class='text-2xl font-sans font-bold mb-4'> Choose a location</p>
+            <div className='flex flex-col font-normal gap-3 mt-2 w-full mb-4 p-3 md:px-8 ' >
+                <p className='text-2xl font-sans font-bold mb-4'> Choose a location</p>
                 <IsLoading isLoading={isLoading} rows={10} input={
                     form.map(item => {
                         const addressInfo = item.addressinfo?.[0] ?? {};
@@ -121,7 +120,7 @@ export const Index = () => {
                             .filter(Boolean)
                             .join(", ");
                         return (
-                            <div key={item.id} class='w-full mb-2 border rounded-md border-gray-200 p-2 flex flex-row gap-3 shadow-md cursor-pointer hover:bg-gray-50'
+                            <div key={item.id} className='w-full mb-2 border rounded-md border-gray-200 p-2 flex flex-row gap-3 shadow-md cursor-pointer hover:bg-gray-50'
                                 onClick={() => handleSubmit(item.id)}>
                                 <Image
                                     src={item?.logo || null}

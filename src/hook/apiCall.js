@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const PRODUCTION= true;
-const API_ENDPOINT = PRODUCTION ? process.env.REACT_APP_ENDPOINT : process.env.REACT_APP_ENDPOINT_LOCAL;
+// PRODUCTION= true;
+const API_ENDPOINT = true ? process.env.REACT_APP_ENDPOINT : process.env.REACT_APP_ENDPOINT_LOCAL;
 
 export const apiCalls = async (method, endPoint,id = null, body = null,query='') => {
     const url = API_ENDPOINT + `${endPoint}`  + (id != null ? `/${id}` : '');
