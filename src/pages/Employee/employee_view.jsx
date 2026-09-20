@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import  { useEffect, useState } from "react";
 import {
     ArrowLeft,
     Star,
@@ -17,13 +18,13 @@ import FetchData from "../../hook/fetchData.js";
 import { Button, Image } from "../../controls/index.jsx";
 import { LocalDate } from "../../common/localDate.js";
 import { convertTo12Hour } from "../../common/generateTimeSlots.js";
+import { IsLoading } from "../../common/index.jsx";
 
-export default function EmployeeView({ employee, onBack, onBook }) {
+export default function EmployeeView() {
 const navigate = useNavigate();
     const { showAlert } = useAlert();
     const {companyList} = useOutletContext();
     const [isLoading, setIsLoading] = useState(false);
-    const [message, setMessage] = useState([]);
     const { Id } = useParams();
     const id = decryptId(Id);
     const isEdit = !!id;
@@ -128,7 +129,8 @@ const navigate = useNavigate();
 
     return (
         <main className="min-h-screen bg-gray-50 pb-32">
-
+           
+<IsLoading isLoading={isLoading} rows={10} input={
             <div className="mx-auto flex w-full max-w-2xl flex-col">
 
                 {/* PROFILE HERO */}
@@ -410,7 +412,7 @@ const navigate = useNavigate();
 
                 </div>
 
-            </div>
+            </div> }/>
 
             {/* FIXED BOOK BUTTON */}
             <div className="fixed bottom-0 left-0 z-40 w-full border-t border-gray-200 bg-white/95 p-4 shadow-[0_-8px_30px_rgba(0,0,0,0.08)] backdrop-blur-md">

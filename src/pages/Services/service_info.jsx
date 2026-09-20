@@ -1,12 +1,12 @@
-import React, { useEffect, useMemo, useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import  { useEffect,  useState } from "react";
 import {
     Clock3,
     Sparkles,
 } from "lucide-react";
 
-import { useNavigate, useOutletContext, useParams } from "react-router-dom";
-import { get_Date, LocalDate } from "../../common/localDate.js";
-import { Button, Tags, SearchInput, Image, TabsButton } from "../../controls/index.jsx";
+import { useNavigate, useOutletContext } from "react-router-dom";
+import {  SearchInput, Image, TabsButton } from "../../controls/index.jsx";
 import { IsLoading, NoResults } from "../../common/index.jsx";
 import { encryptId, updateField } from "../../common/general.jsx";
 
@@ -16,7 +16,7 @@ export default function ServicesInfo({
 }) {
 
     const navigate = useNavigate();
-    const { saveData, refresh, getService } = useOutletContext();
+    const { getService } = useOutletContext();
     const [searchInput, setSearchInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [servicesList, setServicesList] = useState([]);

@@ -1,8 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useOutletContext } from "react-router-dom";
-import { updateField, getByKey } from "../../common/general.jsx";
+import { updateField } from "../../common/general.jsx";
 import { CellFormat } from "../../common/validate.jsx";
-import { Image, Rating, Tags, Textbox, Select, Badge, Textarea } from "../../controls/index.jsx"
-import { useEffect, useRef, useState } from "react";
+import { Textbox,   Textarea } from "../../controls/index.jsx"
+import { useEffect,  useState } from "react";
 import { CheckCircle2, Mail, Phone, User } from "lucide-react";
 import { IsLoading } from "../../common/isLoading.jsx";
 

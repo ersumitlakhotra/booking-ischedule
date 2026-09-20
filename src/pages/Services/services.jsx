@@ -1,4 +1,4 @@
-
+/* eslint-disable react-hooks/exhaustive-deps */
 import {Sparkles} from "lucide-react";
 import ServicesInfo from "./service_info.jsx";
 

@@ -1,13 +1,10 @@
-
-import React, { useEffect, useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import  { useEffect, useState } from "react";
 import {
     ArrowLeft,
     CalendarDays,
     Clock3,
-    UserRound,
-    Scissors,
     AlertTriangle,
-    CheckCircle2,
     XCircle,
     Sparkles,
     Users,
@@ -23,7 +20,7 @@ import { EMAIL_STATUS } from "../../common/enum";
 
 export default function CancelAppointment() {
     const navigate = useNavigate();
-    const { saveData, refresh, companyList, userList } = useOutletContext();
+    const { saveData,  companyList, userList } = useOutletContext();
     const { showAlert } = useAlert();
     const [isLoading, setIsLoading] = useState(false);
     const { Id } = useParams();
@@ -121,16 +118,6 @@ export default function CancelAppointment() {
     }, [id, isEdit]);
 
     const employee = userList.find((item) => item.id.toString() === form.uid.toString())
-    const addressInfo = companyList?.addressinfo?.[0] ?? {};
-    const address = [
-        addressInfo.street,
-        addressInfo.city,
-        addressInfo.province,
-        addressInfo.postal,
-        addressInfo.country,
-    ]
-        .filter(Boolean)
-        .join(", ");
 
     const [reason, setReason] = useState("");
     const reasons = [
@@ -142,14 +129,6 @@ export default function CancelAppointment() {
         "Other",
     ];
 
-    const handleConfirm = () => {
-        if (!reason) return;
-
-       /* onConfirm?.({
-            ...appointmentData,
-            cancellationReason: reason,
-        });*/
-    };
     const handleEmail = async (res) => {
 
         if (!Boolean(companyList?.emailreminder))

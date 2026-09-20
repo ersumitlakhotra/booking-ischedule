@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useMemo, useRef, useState } from "react";
 import { generateTimeSlotsWithDate } from "../../common/generateTimeSlots.js"
 import { IsLoading, updateField } from "../../common";

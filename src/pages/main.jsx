@@ -1,7 +1,6 @@
 import { Home, Users, CalendarDays, Plus, Sparkles } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
-import { Button, SearchInput } from "../controls";
 import HomePage from "./Home/home";
 import Appointments from "./Appointment/appointments";
 import Services from "./Services/services";

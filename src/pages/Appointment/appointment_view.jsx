@@ -1,15 +1,13 @@
-import React, { useEffect, useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import  { useEffect, useState } from "react";
 import {
     ArrowLeft,
     CalendarDays,
     Clock3,
     MapPin,
-    UserRound,
-    BriefcaseBusiness,
     CheckCircle2,
     XCircle,
     ChevronRight,
-    MessageCircle,
     Ban,
     UserX,
     Sparkles,
@@ -23,10 +21,11 @@ import FetchData from "../../hook/fetchData";
 import { get_Date, LocalDate } from "../../common/localDate";
 import { Tags } from "../../controls/tags.jsx";
 import { Image } from "../../controls/image.jsx";
+import { IsLoading } from "../../common/isLoading.jsx";
 
 export default function AppointmentView() {
     const navigate = useNavigate();
-    const { saveData, refresh, companyList, getDiscount, getUser } = useOutletContext();
+    const { companyList,  getUser } = useOutletContext();
     const { showAlert } = useAlert();
     const [isLoading, setIsLoading] = useState(false);
     const { Id } = useParams();
@@ -34,7 +33,6 @@ export default function AppointmentView() {
     const isEdit = !!id;
 
     const [userList, setUserList] = useState([]);
-    const [couponList, setCouponList] = useState([]);
 
     const [form, setForm] = useState({
         id: null,
@@ -87,18 +85,14 @@ export default function AppointmentView() {
         modifiedat: null,
     });
 
-
-
-
     useEffect(() => {
         Init();
     }, [])
 
     const Init = async () => {
         setIsLoading(true);
-        const [UserResponse, CouponResponse] = await Promise.all([getUser(false), getDiscount()]);
+        const [UserResponse] = await Promise.all([getUser(false)]);
         setUserList(UserResponse);
-        setCouponList(CouponResponse);
         setIsLoading(false);
     };
 
@@ -161,8 +155,8 @@ export default function AppointmentView() {
             iconColor: "text-gray-600",
         },
         Pending: {
-            heading: "Appointment pending",
-            message: "Your appointment request has been received and is currently pending confirmation.",
+            heading: "Appointment confirmed",
+            message: "Your appointment has been successfully confirmed. We look forward to seeing you.",
             icon: Clock3,
             iconBg: "bg-yellow-50",
             iconColor: "text-yellow-600",
@@ -197,24 +191,6 @@ export default function AppointmentView() {
         },
     };
 
-    const appointmentData = {
-        id: 1,
-        order_no: "APT-10245",
-        status: "Pending",
-        date: "Monday, September 21, 2026",
-        time: "10:30 AM - 11:15 AM",
-        service: "Haircut & Styling",
-        duration: "45 min",
-        price: "$45",
-        employee: "Sarah Johnson",
-        employeeRole: "Senior Stylist",
-        business: "iStyle Salon",
-        address: "123 Main Street",
-        message:
-            "Your appointment has been successfully booked. Please arrive 5–10 minutes before your scheduled time.",
-    };
-
-
     const statusInfo = APPOINTMENT_STATUS_MESSAGE[form.status];
 
     const StatusIcon = statusInfo.icon;
@@ -247,6 +223,7 @@ export default function AppointmentView() {
 
     return (
         <main className="min-h-screen bg-gray-50 pb-32">
+           <IsLoading isLoading={isLoading} rows={10} input={
             <div className="mx-auto flex w-full max-w-2xl flex-col">
                 {/* HEADER */}
                 <div className="relative overflow-hidden bg-gray-900 px-5 pb-8 pt-5">
@@ -557,6 +534,7 @@ export default function AppointmentView() {
                     </section>*/}
                 </div>
             </div>
+            }/>
 
             {/* BOTTOM ACTIONS */}
             {canModify && (

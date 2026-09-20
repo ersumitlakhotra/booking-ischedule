@@ -1,19 +1,18 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect,  useState } from "react";
 import {
-    Search,
     Users,
     Clock3,
     ChevronRight,
     CheckCircle2,
     XCircle,
-    User,
 } from "lucide-react";
-import { useNavigate, useOutletContext, useParams } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { get_Date, LocalDate } from "../../common/localDate.js";
-import { Button, Tags, SearchInput, Image, TabsButton } from "../../controls/index.jsx";
+import {  SearchInput, Image } from "../../controls/index.jsx";
 import { IsLoading, NoResults } from "../../common/index.jsx";
-import { encryptId, getNextDays, getTimingInfo, updateField } from "../../common/general.jsx";
-import { convertTo12Hour, toHHMM } from "../../common/generateTimeSlots.js";
+import { encryptId, getNextDays,  updateField } from "../../common/general.jsx";
+import { convertTo12Hour } from "../../common/generateTimeSlots.js";
 
 export default function EmployeesInfo({
     form,
@@ -22,7 +21,7 @@ export default function EmployeesInfo({
     setSelectedDayOpen
 }) {
     const navigate = useNavigate();
-    const { refresh,companyList, getUser, getAttendance } = useOutletContext();
+    const { companyList, getUser, getAttendance } = useOutletContext();
     const [isLoading, setIsLoading] = useState(false);
     const [attendanceList, setAttendanceList] = useState([]);
     const [userList, setUserList] = useState([]);
@@ -50,6 +49,21 @@ export default function EmployeesInfo({
         working: Boolean(value?.[2]),
     }));
 
+
+    useEffect(() => {
+        if(!business || selectedDay !== LocalDate()) return;
+
+        const today = new Date()
+            .toLocaleDateString("en-US", { weekday: "long" })
+            .toLowerCase();
+
+        const open = business.some(
+            o => o.key.toLowerCase() === today && o.working
+        );
+
+        setSelectedDayOpen(open);
+    }, [business]); 
+    
     useEffect(() => {
         Init();
     }, []) 
@@ -65,6 +79,7 @@ export default function EmployeesInfo({
         const lastIndex = daysData.length - 1;
         const lastDay = daysData[lastIndex].date;
         const [Response, UserResponse] = await Promise.all([getAttendance(today,lastDay), getUser()]);
+      
         setUserList(UserResponse);
         setFilteredList(UserResponse);
         setAttendanceList(Response);

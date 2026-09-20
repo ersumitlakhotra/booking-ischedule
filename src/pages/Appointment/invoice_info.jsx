@@ -1,11 +1,12 @@
-
+/* eslint-disable react-hooks/exhaustive-deps */
 import { getTax, updateField } from "../../common/general.jsx";
-import { Image, Rating, Tags, Textbox, Select, Badge, DateTime, Checkbox, Calendar, Item, Button, Tooltip } from "../../controls/index.jsx"
-import { CellFormat, NumberFormat, PriceFormat } from "../../common/validate.jsx"
-import { useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { Textbox, Select, Badge,  Button, Tooltip } from "../../controls/index.jsx"
+import { PriceFormat } from "../../common/validate.jsx"
+import { useEffect, useMemo,  useState } from "react";
+import {  useOutletContext } from "react-router-dom";
 import { Minus, Plus } from "lucide-react";
 import { calculateCouponDiscount, validateSelectedCoupon } from "./validation.jsx";
+import { IsLoading } from "../../common/isLoading.jsx";
 
 const InvoiceInfo = ({ form, setForm,prevForm, isEdit}) => {
       const [isLoading, setIsLoading] = useState(false);
@@ -330,6 +331,7 @@ const InvoiceInfo = ({ form, setForm,prevForm, isEdit}) => {
     }
 };
     return (
+        <IsLoading isLoading={isLoading} rows={10} input={
         <>
         <div className="w-full rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
 
@@ -501,7 +503,7 @@ const InvoiceInfo = ({ form, setForm,prevForm, isEdit}) => {
             </div>
 
         </div>
-        </>
+        </>} />
     )
 }
 

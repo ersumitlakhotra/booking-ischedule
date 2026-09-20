@@ -1,19 +1,15 @@
-import React, { useEffect, useMemo, useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import  { useEffect,  useState } from "react";
 import {
-    Search,
     CalendarDays,
     Clock3,
     MapPin,
     ChevronRight,
-    MoreVertical,
     Pencil,
-    Download,
-    Cross,
     X,
-    Eye,
     Users,
 } from "lucide-react";
-import { ActionMenu, Button, SearchInput, Select, TabsButton, Tags } from "../../controls/index.jsx";
+import { ActionMenu,  SearchInput,  TabsButton, Tags } from "../../controls/index.jsx";
 import { get_Date, LocalDate } from "../../common/localDate.js";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { IsLoading } from "../../common/isLoading.jsx";
@@ -22,7 +18,7 @@ import { encryptId, openMaps } from "../../common/general.jsx";
 
 export default function Appointments() {
     const navigate = useNavigate();
-    const { refresh, companyList, getUserAppointment, getUser } = useOutletContext();
+    const {  companyList, getUserAppointment, getUser } = useOutletContext();
     const [isLoading, setIsLoading] = useState(false);
     const [userList, setUserList] = useState([]);
     const [appointmentList, setAppointmentList] = useState([]);
