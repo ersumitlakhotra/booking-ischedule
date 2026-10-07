@@ -31,6 +31,7 @@ export const AuthProvider = ({ children }) => {
             // Only save token after successful authentication
             localStorage.setItem('accesstoken', data.token);
             localStorage.setItem('storeid', id);
+            localStorage.setItem('cell', cell);
 
             const decoded = jwtDecode(data.token);
             setIsAuthenticated(true);

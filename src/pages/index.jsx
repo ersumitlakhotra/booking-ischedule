@@ -72,7 +72,7 @@ export const Index = () => {
 
     const handleSubmit = async (cid) => {
         setIsLoading(true);
-        const res = await login(cid,id);
+        const res = await login(cid,id,cell);
         if (res.status)
             navigate("/Main");
         else
@@ -96,11 +96,6 @@ export const Index = () => {
 
         setMessage(errors);
         return errors.length === 0;
-    };
-
-    const handleContinue = async () => {
-        localStorage.setItem('cell', cell);
-        setOpenCell(false);
     };
 
     return (
@@ -165,7 +160,7 @@ export const Index = () => {
                                 step={1}
                                 totalSteps={1}
                                 completeLabel="Continue As Guest !"
-                                onComplete={() => Validate() && handleContinue()}
+                                onComplete={() => Validate() && setOpenCell(false)}
                             />
                         </>
                     } />
