@@ -1,3 +1,4 @@
+
 import {
     createContext,
     useCallback,
@@ -12,6 +13,7 @@ import {
     TriangleAlert,
     Info,
     X,
+    Bell,
 } from "lucide-react";
 
 const AlertContext = createContext(null);
@@ -59,6 +61,14 @@ const variants = {
         borderClass: "border-blue-200",
         progressClass: "bg-blue-500",
     },
+    notification: {
+        icon: Bell,
+        bgClass: "bg-yellow-50",
+        textClass: "text-yellow-800",
+        iconClass: "text-yellow-600",
+        borderClass: "border-yellow-200",
+        progressClass: "bg-yellow-500",
+    },
 };
 
 export const AlertProvider = ({ children }) => {
@@ -78,6 +88,7 @@ export const AlertProvider = ({ children }) => {
     const showAlert = useCallback(
         ({
             type = "success",
+            title = "",
             message = "",
             duration = 4000,
             position = "top-center",
@@ -88,6 +99,7 @@ export const AlertProvider = ({ children }) => {
             const alert = {
                 id,
                 type,
+                title,
                 message,
                 duration,
                 position,
@@ -178,7 +190,6 @@ export const AlertProvider = ({ children }) => {
         ${current.borderClass}
     `}
                                             >
-
                                                 <div className="flex items-start gap-3">
                                                     <Icon
                                                         size={
@@ -188,13 +199,25 @@ export const AlertProvider = ({ children }) => {
                                                     />
 
                                                     <div className="flex-1">
-                                                        <p
-                                                            className={`text-sm font-medium break-words ${current.textClass}`}
-                                                        >
-                                                            {
-                                                                alert.message
-                                                            }
-                                                        </p>
+                                                        {alert.title && (
+                                                            <p
+                                                                className={`text-sm font-semibold ${current.textClass}`}
+                                                            >
+                                                                {
+                                                                    alert.title
+                                                                }
+                                                            </p>
+                                                        )}
+
+                                                        {alert.message && (
+                                                            <p
+                                                                className={`text-sm ${alert.title ? "mt-1 opacity-80" : "font-medium"} break-words ${current.textClass}`}
+                                                            >
+                                                                {
+                                                                    alert.message
+                                                                }
+                                                            </p>
+                                                        )}
                                                     </div>
 
                                                     <button
@@ -253,3 +276,4 @@ export const useAlert = () => {
 
     return context;
 };
+

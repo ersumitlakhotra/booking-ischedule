@@ -15,11 +15,11 @@ export const AuthProvider = ({ children }) => {
         setIsAuthenticated(false);
     };
   
-    const login = async (cid,id) => {
+    const login = async (cid,id,cell) => {
         setIsLoading(true);
 
         try {
-            const res = await guestAuth(cid);
+            const res = await guestAuth(cid,cell);
 
             const data = res.data.data;
 

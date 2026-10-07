@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useRef, useState } from "react";
-import { Outlet, useLocation, useNavigate,useParams } from "react-router-dom";
+import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useAlert } from "../controls/AlertProvider.jsx";
 import { LoaderCircle } from "lucide-react";
 import { Modal } from "../controls/modal.jsx";
@@ -9,9 +9,9 @@ import FetchData from "../hook/fetchData";
 import { get_Date, get_lastDaysDate, LocalDate } from "../common/localDate";
 
 import SaveData from "../hook/saveData";
-import { getDateRangeStatus, getWeekDates} from '../common/general.jsx'
+import { getDateRangeStatus, getWeekDates } from '../common/general.jsx'
 
-import { useIdleTimer } from 'react-idle-timer';
+import { initNotification } from "../Firebase/requestPermission";
 import { getStorage } from "../common/localStorage.js";
 
 const ProtectedLayout = () => {
@@ -20,7 +20,7 @@ const ProtectedLayout = () => {
     const navigate = useNavigate();
     const { pathname } = useLocation();
     const { showAlert } = useAlert();
-    
+
     const [apptDate, setApptDate] = useState(LocalDate());
     const [calenderDate, setCalenderDate] = useState(LocalDate());
     const [selectedCustomer, setSelectedCustomer] = useState(null);
@@ -35,7 +35,7 @@ const ProtectedLayout = () => {
     const [isSetupComplete, setIsSetupComplete] = useState(true);
     const [isPaymentPending, setIsPaymentPending] = useState(false);
     const [isDisabled, setIsDisabled] = useState(false);
-   
+
 
     /*  Lists */
     const [companyList, setCompanyList] = useState(null);
@@ -45,9 +45,9 @@ const ProtectedLayout = () => {
 
     const userCell = localStorage.getItem("cell") || '';
     const [customerList, setCustomerList] = useState([]);
-   const [step, setStep] = useState(1);
-     const { storeId } = useParams();
-{/*
+    const [step, setStep] = useState(1);
+    const { storeId } = useParams();
+    {/*
     const onIdle = () => {
         window.location.replace(`${process.env.REACT_APP_DOMAIN}/book-appointment?store=${storeId}`);
     };
@@ -64,19 +64,34 @@ const ProtectedLayout = () => {
     }, [pathname]);
 
     useEffect(() => {
-       init()
+        if (ranOnce.current) return;
+        ranOnce.current = true;
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("/firebase-messaging-sw.js")
+                .then(registration => initNotification(registration, saveData, onNotification))
+                .catch(console.error);
+        };
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.addEventListener('message', (event) => {
+                if (event.data?.type === 'DATA_REFRESH') {
+                    setRefresh(refresh + 1);
+                }
+            });
+        }
+        init();
     }, []);
 
+
     const init = async () => {
-        await Promise.all([getCompany(),getCustomer()]);     
+        await Promise.all([getCompany(), getCustomer()]);
     }
 
     useEffect(() => {
 
-        if(!companyList) return;
-        
-        
-       {/* if (companyList.length !== 0) {
+        if (!companyList) return;
+
+
+        {/* if (companyList.length !== 0) {
             setIsLoading(true)
             const checkPlan = checkPlanStatus(companyList.plan, companyList.createdat)
             setExpired(pathname === '/setting' ? false : checkPlan.expired)
@@ -90,11 +105,11 @@ const ProtectedLayout = () => {
 
             setIsLoading(false)
         }*/}
-        
+
     }, [companyList]);
 
 
-     const getCompany = async () => {
+    const getCompany = async () => {
         const localStorage = await getStorage();
 
         const response = await FetchData({
@@ -122,7 +137,7 @@ const ProtectedLayout = () => {
             }
         })
         return response.data;
-    } 
+    }
 
     const getUserAppointment = async () => {
         const response = await FetchData({
@@ -139,14 +154,14 @@ const ProtectedLayout = () => {
             }
         })
         return response.data;
-    } 
-  
-   const getCustomer = async () => {
+    }
+
+    const getCustomer = async () => {
         const response = await FetchData({
             endPoint: 'customers',
-             query: {
+            query: {
                 orderBy: 'name',
-                orderDir: 'ASC', 
+                orderDir: 'ASC',
             }
         })
         const userDetails = response.data.find(o => o.cell === userCell);
@@ -157,18 +172,19 @@ const ProtectedLayout = () => {
     const getDiscount = async () => {
         const response = await FetchData({
             endPoint: 'discount',
-             query: {
+            query: {
                 orderBy: 'startdate',
                 orderDir: 'DESC',
             }
         })
-        const responseData=response.data.map(item => ({ ...item,
+        const responseData = response.data.map(item => ({
+            ...item,
             status: getDateRangeStatus(item.startdate, item.enddate)
         }))
         return responseData;
-    }   
+    }
 
-    const getAttendance = async (start,end) => {    
+    const getAttendance = async (start, end) => {
         const response = await FetchData({
             endPoint: 'attendance',
             query: {
@@ -184,27 +200,27 @@ const ProtectedLayout = () => {
         })
         return response.data;
     }
-    
+
     const getService = async () => {
         const response = await FetchData({
             endPoint: 'services',
-                query: {
+            query: {
                 orderBy: 'name',
                 orderDir: 'ASC',
             }
         })
-setServiceList(response.data)
+        setServiceList(response.data)
         return response.data;
     }
-    
 
-    const getUser = async (activeOnly=true) => {
+
+    const getUser = async (activeOnly = true) => {
         const response = await FetchData({
             endPoint: 'user',
             query: {
                 orderBy: 'fullname',
                 orderDir: 'ASC',
-                 ...(activeOnly && {
+                ...(activeOnly && {
                     filters: JSON.stringify({
                         status: {
                             operator: "=",
@@ -217,18 +233,30 @@ setServiceList(response.data)
         setUserList(response.data);
         return response.data;
     }
-     const getInventory = async () => {
+    const getInventory = async () => {
         const response = await FetchData({
             endPoint: 'inventory',
-             query: {
+            query: {
                 orderBy: 'name',
                 orderDir: 'ASC',
             }
         })
         return response.data;
     }
-  
-    const saveData = async ({ label, method='POST', endPoint, id = null, body = null, notify = true, email = false }) => {
+
+    const onNotification = ({ title, description }) => {
+        showAlert({
+            type: "notification",
+            title: title,
+            message: description,
+            duration: 5000,
+            position: "top-right",
+        });
+        // notifications({ title: `${title} Appointment`, description: description, cancel: title === 'Cancel' });
+        setRefresh(refresh + 1);
+    }
+
+    const saveData = async ({ label, method = 'POST', endPoint, id = null, body = null, notify = true, email = false }) => {
         setIsLoading(true)
         const res = await SaveData({
             label: label,
@@ -237,7 +265,7 @@ setServiceList(response.data)
             id: id,
             body: body
         })
-        
+
         setIsLoading(false)
 
         if (res.isSuccess) {
@@ -260,18 +288,18 @@ setServiceList(response.data)
 
     return (
         <div class='min-h-screen w-full flex flex-col  '>
-             <main class="flex-1 scroll-auto ">
+            <main class="flex-1 scroll-auto ">
                 <Outlet context={{
-                    saveData, refresh, setRefresh, localStorage ,                                                  
-                    getAppointment,getUserAppointment,apptDate, setApptDate,
-                    userCell,step,setStep,companyList,
-                    getAttendance, 
+                    saveData, refresh, setRefresh, localStorage,
+                    getAppointment, getUserAppointment, apptDate, setApptDate,
+                    userCell, step, setStep, companyList,
+                    getAttendance,
                     customerList, getCustomer,
-                    getCompany,        
+                    getCompany,
                     getDiscount,
                     getInventory,
-                   serviceList, getService,
-                   userList, getUser                   
+                    serviceList, getService,
+                    userList, getUser
                 }} />
             </main>
             {isLoading &&
@@ -289,11 +317,11 @@ setServiceList(response.data)
                         zIndex: 9999, // Ensure it's on top
                     }}
                 >
-                  <LoaderCircle className="h-12 w-12 animate-spin " />
+                    <LoaderCircle className="h-12 w-12 animate-spin " />
                 </div>
             }
-           
-    
+
+
 
         </div>
     );
