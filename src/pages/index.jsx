@@ -73,26 +73,16 @@ export const Index = () => {
     useEffect(() => {
     if (!Id) return;
 
+    const startUrl = `${window.location.origin}/${Id}`;
+
     const manifest = {
         name: "iSchedule",
         short_name: "iSchedule",
-        start_url: `/${Id}`,
-        scope: `/${Id}`,
+        start_url: startUrl,
+        scope: `${window.location.origin}/${Id}/`,
         display: "standalone",
         theme_color: "#061a24",
         background_color: "#ffffff",
-        icons: [
-            {
-                src: "/icons/icon-192.png",
-                sizes: "192x192",
-                type: "image/png"
-            },
-            {
-                src: "/icons/icon-512.png",
-                sizes: "512x512",
-                type: "image/png"
-            }
-        ]
     };
 
     const blob = new Blob(
@@ -100,11 +90,9 @@ export const Index = () => {
         { type: "application/manifest+json" }
     );
 
-    const manifestUrl = URL.createObjectURL(blob);
+    const url = URL.createObjectURL(blob);
 
-    let link = document.querySelector(
-        'link[rel="manifest"]'
-    );
+    let link = document.querySelector('link[rel="manifest"]');
 
     if (!link) {
         link = document.createElement("link");
@@ -112,11 +100,14 @@ export const Index = () => {
         document.head.appendChild(link);
     }
 
-    link.href = manifestUrl;
+    link.href = url;
 
-    return () => {
-        URL.revokeObjectURL(manifestUrl);
-    };
+    console.log("✅ Manifest Updated");
+    console.log("Store ID:", Id);
+    console.log("Start URL:", manifest.start_url);
+    console.log("Scope:", manifest.scope);
+    console.log("Manifest:", manifest);
+    console.log("Manifest URL:", link.href);
 }, [Id]);
 
     const handleSubmit = async (cid) => {
