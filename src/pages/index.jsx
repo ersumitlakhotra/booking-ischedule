@@ -70,6 +70,55 @@ export const Index = () => {
         getById(id);
     }, [id, openCell]);
 
+    useEffect(() => {
+    if (!Id) return;
+
+    const manifest = {
+        name: "iSchedule",
+        short_name: "iSchedule",
+        start_url: `/${Id}`,
+        scope: `/${Id}`,
+        display: "standalone",
+        theme_color: "#061a24",
+        background_color: "#ffffff",
+        icons: [
+            {
+                src: "/icons/icon-192.png",
+                sizes: "192x192",
+                type: "image/png"
+            },
+            {
+                src: "/icons/icon-512.png",
+                sizes: "512x512",
+                type: "image/png"
+            }
+        ]
+    };
+
+    const blob = new Blob(
+        [JSON.stringify(manifest)],
+        { type: "application/manifest+json" }
+    );
+
+    const manifestUrl = URL.createObjectURL(blob);
+
+    let link = document.querySelector(
+        'link[rel="manifest"]'
+    );
+
+    if (!link) {
+        link = document.createElement("link");
+        link.rel = "manifest";
+        document.head.appendChild(link);
+    }
+
+    link.href = manifestUrl;
+
+    return () => {
+        URL.revokeObjectURL(manifestUrl);
+    };
+}, [Id]);
+
     const handleSubmit = async (cid) => {
         setIsLoading(true);
         const res = await login(cid,id,cell);
