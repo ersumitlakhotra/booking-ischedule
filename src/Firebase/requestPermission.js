@@ -6,14 +6,13 @@ import { getStorage } from "../common/localStorage.js";
 // This function will request permission and get FCM token
 export const initNotification = async (registration, saveData, onNotification) => {
     try {
-
         if (requestPermission()) {
             const localStorage = await getStorage();
             const token = await getToken(messaging, {
                 vapidKey: "BE0_FiNfC14nhWlVxNiG36JJKdXq2PquIaYVFiNQK06IDS83tP35_wpjW12cYHLyiqUGC0HCWU11hUBiLcvMxJ4",
                 serviceWorkerRegistration: registration,
             });
-            if (localStorage.custid.toString() !== "0") {
+            if ((localStorage.custid || "0").toString() !== "0") {
                 const body = JSON.stringify({ uid: localStorage.custid, token: token, role: "Customer" });
                 saveData({
                     label: "Notifications",
@@ -23,11 +22,10 @@ export const initNotification = async (registration, saveData, onNotification) =
                     notify: false
                 });
             }
-            //console.log("FCM Token:", token);
         }
         // 👉 Send this token to your backend
     } catch (err) {
-        // console.error("Push init failed:", err);
+         console.error("Push init failed:", err);
     }
 
     // Optional: Listen to messages in foreground

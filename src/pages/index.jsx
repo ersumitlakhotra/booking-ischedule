@@ -31,6 +31,20 @@ export const Index = () => {
     const id = Id;
    // const isEdit = !!id;
 
+const [showInstallPrompt, setShowInstallPrompt] = useState(false);
+    const isIOS =
+        /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+        (navigator.platform === "MacIntel" &&
+            navigator.maxTouchPoints > 1);
+
+    const isStandalone =
+        window.matchMedia("(display-mode: standalone)").matches ||
+        window.navigator.standalone === true;
+
+    if (isIOS && !isStandalone) {
+        setShowInstallPrompt(true);
+    }
+
     useEffect(() => {
         if (openCell) return;
 
@@ -69,46 +83,6 @@ export const Index = () => {
 
         getById(id);
     }, [id, openCell]);
-
-    useEffect(() => {
-    if (!Id) return;
-
-    const startUrl = `${window.location.origin}/${Id}`;
-
-    const manifest = {
-        name: "iSchedule",
-        short_name: "iSchedule",
-        start_url: startUrl,
-        scope: `${window.location.origin}/${Id}/`,
-        display: "standalone",
-        theme_color: "#061a24",
-        background_color: "#ffffff",
-    };
-
-    const blob = new Blob(
-        [JSON.stringify(manifest)],
-        { type: "application/manifest+json" }
-    );
-
-    const url = URL.createObjectURL(blob);
-
-    let link = document.querySelector('link[rel="manifest"]');
-
-    if (!link) {
-        link = document.createElement("link");
-        link.rel = "manifest";
-        document.head.appendChild(link);
-    }
-
-    link.href = url;
-
-    console.log("✅ Manifest Updated");
-    console.log("Store ID:", Id);
-    console.log("Start URL:", manifest.start_url);
-    console.log("Scope:", manifest.scope);
-    console.log("Manifest:", manifest);
-    console.log("Manifest URL:", link.href);
-}, [Id]);
 
     const handleSubmit = async (cid) => {
         setIsLoading(true);
@@ -233,6 +207,27 @@ export const Index = () => {
                     } />
                 </>
             } />
+
+
+            {showInstallPrompt && (
+                <div className="fixed bottom-4 left-4 right-4 z-50 rounded-2xl bg-white p-5 shadow-2xl">
+                    <h3 className="text-lg font-semibold">
+                        Add iSchedule to your Home Screen
+                    </h3>
+
+                    <p className="mt-2 text-sm text-gray-600">
+                        Tap the Share button in Safari, then select
+                        <strong> Add to Home Screen</strong>.
+                    </p>
+
+                    <button
+                        onClick={() => setShowInstallPrompt(false)}
+                        className="mt-4 rounded-xl bg-[#061a24] px-4 py-2 text-white"
+                    >
+                        Got it
+                    </button>
+                </div>
+            )}
         </>
 
     )

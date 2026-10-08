@@ -2,7 +2,7 @@
 import { jwtDecode } from "jwt-decode";
 
 export const getStorage = async () => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("accesstoken");
     if (!token)
         return { cid: null, custid:null }
 
