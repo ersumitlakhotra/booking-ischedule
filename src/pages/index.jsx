@@ -31,20 +31,6 @@ export const Index = () => {
     const id = Id;
    // const isEdit = !!id;
 
-const [showInstallPrompt, setShowInstallPrompt] = useState(false);
-    const isIOS =
-        /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-        (navigator.platform === "MacIntel" &&
-            navigator.maxTouchPoints > 1);
-
-    const isStandalone =
-        window.matchMedia("(display-mode: standalone)").matches ||
-        window.navigator.standalone === true;
-
-    if (isIOS && !isStandalone) {
-        setShowInstallPrompt(true);
-    }
-
     useEffect(() => {
         if (openCell) return;
 
@@ -208,26 +194,6 @@ const [showInstallPrompt, setShowInstallPrompt] = useState(false);
                 </>
             } />
 
-
-            {showInstallPrompt && (
-                <div className="fixed bottom-4 left-4 right-4 z-50 rounded-2xl bg-white p-5 shadow-2xl">
-                    <h3 className="text-lg font-semibold">
-                        Add iSchedule to your Home Screen
-                    </h3>
-
-                    <p className="mt-2 text-sm text-gray-600">
-                        Tap the Share button in Safari, then select
-                        <strong> Add to Home Screen</strong>.
-                    </p>
-
-                    <button
-                        onClick={() => setShowInstallPrompt(false)}
-                        className="mt-4 rounded-xl bg-[#061a24] px-4 py-2 text-white"
-                    >
-                        Got it
-                    </button>
-                </div>
-            )}
         </>
 
     )
